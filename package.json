@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/sdc-green-lantern/James-Products-API#readme",
   "dependencies": {
+    "csv-parse": "^5.3.0",
+    "csv-parser": "^3.0.0",
     "dotenv": "^16.0.2",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",

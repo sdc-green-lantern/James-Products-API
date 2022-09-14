@@ -4,33 +4,42 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 const { POSTGRES_USER, POSTGRES_PWD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB } = process.env;
 
-const sequelize = new Sequelize(`postgres://${POSTGRES_USER}:${POSTGRES_PWD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`);
+const sequelize = new Sequelize(
+  `postgres://${POSTGRES_USER}:${POSTGRES_PWD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`,
+  {
+    pool: {
+      max: 20,
+      acquire: 100000,
+      idle: 10000,
+    },
+  }
+);
 
 const Feature = sequelize.define('Feature', {
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   value: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
 });
 
 const Category = sequelize.define('Category', {
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
 });
 
 const Product = sequelize.define('Product', {
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   slogan: {
-    type: DataTypes.STRING
+    type: DataTypes.TEXT
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.TEXT
   },
   categoryId: {
     type: DataTypes.INTEGER,
@@ -98,7 +107,7 @@ const Style = sequelize.define('Style', {
     },
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   sale_price: {
     type: DataTypes.REAL,
@@ -112,7 +121,7 @@ const Style = sequelize.define('Style', {
 
 const Size = sequelize.define('Size', {
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
 });
 
@@ -148,11 +157,11 @@ const Photo = sequelize.define('Photo', {
     },
   },
   thumbnailUrl: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     field: 'thumbnail_url',
   },
   url: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
 });
 // reset db
