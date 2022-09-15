@@ -1,5 +1,5 @@
-const sequelize = require('./connect.js');
-const extractData = require('./extract.js');
+const sequelize = require('../connect.js');
+const extractData = require('../extract.js');
 
 const {
   Feature, Category, Product, ProductFeature,
@@ -29,17 +29,3 @@ const transformed = data.map(
 );
 
 Product.bulkCreate(transformed);
-
-// load features
-const featuresData = extractData('./db/features.csv');
-Feature.bulkCreate(
-  featuresData.map(
-    ({id, product_id, feature, value}) => ({ id: id, name: feature, value: value })
-  )
-);
-
-ProductFeature.bulkCreate(
-  featuresData.map(({id, product_id}) =>
-    ({ ProductId: product_id, FeatureId: id })
-  )
-);

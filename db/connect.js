@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
   `postgres://${POSTGRES_USER}:${POSTGRES_PWD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`,
   {
     pool: {
-      max: 20,
+      max: 50,
       acquire: 100000,
       idle: 10000,
     },
@@ -54,8 +54,14 @@ const Product = sequelize.define('Product', {
     field: 'default_price',
   },
 });
+//Product.hasOne(Category);
+//Product.hasOne(Category);
+Product.belongsTo(Category, {
+  foreignKey: 'category_id',
+});
+Category.hasMany(Product);
 
-const ProductFeature = sequelize.define('products_features', {
+const ProductFeature = sequelize.define('ProductFeature', {
   productId: {
     type: DataTypes.INTEGER,
     field: 'product_id',
@@ -74,6 +80,13 @@ const ProductFeature = sequelize.define('products_features', {
   },
 }, {
   tableName: 'products_features',
+});
+
+Product.belongsToMany(Feature, {
+  through: ProductFeature
+});
+Feature.belongsToMany(Product, {
+  through: ProductFeature
 });
 
 const RelatedProduct = sequelize.define('RelatedProduct', {
