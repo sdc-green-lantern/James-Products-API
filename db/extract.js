@@ -1,15 +1,13 @@
-// const csv = require('csv-parser');
+const csv = require('csv-parser');
 const { parse } = require('csv-parse/sync');
 const fs = require('fs');
 
-/*
-const extractData = (fileName, cb) => {
+const extractDataAsync = (fileName, cb, done) => {
   fs.createReadStream(fileName)
     .pipe(csv())
-    .on('data', cb)
-    .on('end', () => console.log(`finished loading ${fileName}`))
+    .on('data', async (data) => await cb(data) )
+    .on('end', done)
 }
-*/
 const extractData = (filename) => {
   const results = [];
   const data = fs.readFileSync(filename).toString()
@@ -21,4 +19,4 @@ const extractData = (filename) => {
   return results;
 };
 
-module.exports = extractData;
+module.exports = { extractData, extractDataAsync };

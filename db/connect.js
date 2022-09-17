@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     pool: {
       max: 50,
       acquire: 100000,
-      idle: 10000,
+      idle: 1000,
     },
   }
 );
@@ -83,31 +83,54 @@ const ProductFeature = sequelize.define('ProductFeature', {
 });
 
 Product.belongsToMany(Feature, {
-  through: ProductFeature
+  through: ProductFeature, 
+  unique: false,
+  foreignKey: 'productId'
 });
 Feature.belongsToMany(Product, {
-  through: ProductFeature
+  through: ProductFeature,
+  unique: false,
+  foreignKey: 'featureId'
 });
 
 const RelatedProduct = sequelize.define('RelatedProduct', {
-  product1Id: {
+  id: {
     type: DataTypes.INTEGER,
-    field: 'product1_id',
+    primaryKey: true,
+  },
+  ProductId: {
+    type: DataTypes.INTEGER,
+    field: 'product_id',
+    unique: false,
     references: {
       model: Product,
       key: 'id',
+      unique: false,
     },
   },
-  product2Id: {
+  RelatedId: {
     type: DataTypes.INTEGER,
-    field: 'product2_id',
+    field: 'related_product_id',
+    unique: false,
     references: {
       model: Product,
       key: 'id',
+      unique: false,
     },
   },
 }, {
   tableName: 'related_products',
+});
+
+Product.belongsToMany(Product, {
+  as: 'Related',
+  through: {
+    model: RelatedProduct, 
+    foreignKey: 'ProductId',
+    unique: false,
+  },
+  //foreignKey: 'RelatedId',
+  unique: false,
 });
 
 const Style = sequelize.define('Style', {
@@ -131,6 +154,12 @@ const Style = sequelize.define('Style', {
     field: 'default_style',
   },
 });
+Style.belongsTo(Product, {
+  foreignKey: 'productId'
+});
+Product.hasMany(Style, {
+  foreignKey: 'productId'
+});
 
 const Size = sequelize.define('Size', {
   name: {
@@ -139,16 +168,15 @@ const Size = sequelize.define('Size', {
 });
 
 const SKU = sequelize.define('SKU', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+  },
   quantity: {
     type: DataTypes.INTEGER,
   },
-  sizeId: {
-    type: DataTypes.INTEGER,
-    field: 'size_id',
-    references: {
-      model: Size,
-      key: 'id',
-    },
+  size: {
+    type: DataTypes.TEXT,
   },
   styleId: {
     type: DataTypes.INTEGER,
@@ -159,8 +187,19 @@ const SKU = sequelize.define('SKU', {
     },
   },
 });
+SKU.belongsTo(Style, {
+  foreignKey: 'styleId'
+});
+Style.hasMany(SKU, {
+  foreignKey: 'styleId'
+});
+
 
 const Photo = sequelize.define('Photo', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+  },
   styleId: {
     type: DataTypes.INTEGER,
     field: 'style_id',
@@ -176,6 +215,13 @@ const Photo = sequelize.define('Photo', {
   url: {
     type: DataTypes.TEXT,
   },
+});
+
+Photo.belongsTo(Style, {
+  foreignKey: 'styleId'
+});
+Style.hasMany(Photo, {
+  foreignKey: 'styleId'
 });
 // reset db
 // await sequelize.sync({ force: true });

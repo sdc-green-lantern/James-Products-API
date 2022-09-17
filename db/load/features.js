@@ -1,5 +1,5 @@
 const sequelize = require('../connect.js');
-const extractData = require('../extract.js');
+const { extractData } = require('../extract.js');
 
 const {
   Feature, Category, Product, ProductFeature,

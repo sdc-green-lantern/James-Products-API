@@ -1,5 +1,5 @@
 const sequelize = require('../connect.js');
-const extractData = require('../extract.js');
+const { extractData } = require('../extract.js');
 
 const {
   Feature, Category, Product, ProductFeature,
@@ -29,3 +29,5 @@ const transformed = data.map(
 );
 
 Product.bulkCreate(transformed);
+/* create product id=0 for references contained in related.csv */
+Product.create({id: 0, name: 'this product has no related items'})

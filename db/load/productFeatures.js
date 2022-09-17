@@ -1,5 +1,5 @@
 const sequelize = require('../connect.js');
-const extractData = require('../extract.js');
+const { extractData } = require('../extract.js');
 
 const {
   Feature, Category, Product, ProductFeature,
@@ -12,6 +12,6 @@ const featuresData = extractData('./db/features.csv');
 
 ProductFeature.bulkCreate(
   featuresData.map(({id, product_id}) =>
-    ({ ProductId: product_id, FeatureId: id })
+    ({ productId: product_id, featureId: id })
   )
 );
