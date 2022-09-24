@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
   `postgres://${POSTGRES_USER}:${POSTGRES_PWD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`,
   {
     pool: {
-      max: 50,
+      max: 100,
       acquire: 100000,
       idle: 1000,
     },
